@@ -1,9 +1,11 @@
 import { useSelector } from "react-redux"
-import Dashboard from "./components/Dashboard";
+//import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Register from "./components/Register";
+import { lazy } from "react";
 
+const DashboardComponent=lazy(()=>import('./components/Dashboard'));
 
 function App() {
 
@@ -11,7 +13,14 @@ function App() {
 
   const [showLogin, setShowLogin] = useState(true);
 
-  if (user) return <Dashboard />;
+  if(user){
+    return(
+      <Suspense fallback={<div>Loading...</div>}>
+        <DashboardComponent/>
+      </Suspense>
+    )
+  }
+
   return showLogin ? (
     <Login switchToRegister={() => setShowLogin(false)} />
   ) : (
